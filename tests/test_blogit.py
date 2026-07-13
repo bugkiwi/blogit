@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts" / "blogit.py"
+SCRIPT = ROOT / "skills" / "blogit" / "scripts" / "blogit.py"
 
 
 def write_jsonl(path: Path, records: list[dict]) -> None:
