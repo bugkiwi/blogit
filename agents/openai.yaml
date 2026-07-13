@@ -1,0 +1,4 @@
+interface:
+  display_name: "Blogit"
+  short_description: "Turn agent sessions into first-person Markdown stories"
+  default_prompt: "Use $blogit to turn one or more recent agent sessions into a polished first-person Markdown article."
