@@ -23,7 +23,13 @@ Extraction must emit only visible conversational messages:
 - preserve Markdown and code inside visible text;
 - apply `clean_visible_text()` to remove known injected context wrappers.
 
-Never infer prose from tool payloads. The article-writing agent can inspect final visible explanations and ask the user when evidence is missing.
+Never infer prose or evidence from tool payloads. The article-writing agent must use the session's `project` metadata for targeted, read-only repository verification and ask the user or mark the claim unverified when evidence is missing.
+
+## Evidence boundary
+
+Do not add `evidence-hints` by mining tool calls or results from raw session logs. This would weaken the privacy boundary and couple adapters to unstable client-specific payloads. Prefer targeted repository inspection after extraction.
+
+Any future evidence-hint feature must be explicitly opt-in, schema-specific, redaction-first, and limited to allowlisted metadata; it must never emit command output or tool-result bodies. Add synthetic fixtures proving that secrets, prompts, private paths, and arbitrary payload text remain excluded.
 
 ## Registration
 
