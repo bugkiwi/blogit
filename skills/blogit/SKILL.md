@@ -69,7 +69,7 @@ Prefer one strong thesis over a chronological inventory. Combine multiple sessio
 
 Do not turn assistant claims into facts merely because they appear in the transcript. Distinguish observed results from suggestions, and omit claims that the dialogue never verifies.
 
-Use at most three primary evidence scenes by default. Compress or remove a scene when another proves substantially the same point, removing it does not weaken the thesis, it introduces more concepts than reusable insight, or it mainly demonstrates how much work was completed.
+Select primary evidence scenes by distinct contribution, not by a numeric cap. Keep every scene needed to establish a different claim, reasoning change, boundary, or reusable lesson. Compress or remove a scene when another proves substantially the same point, removing it does not weaken the thesis, it introduces more concepts than reusable insight, or it mainly demonstrates how much work was completed. When many scenes support one thesis, group them under a clear framework; when they support competing theses, propose separate articles.
 
 ### 4. Verify falsifiable technical claims
 
@@ -97,17 +97,15 @@ Present:
 3. the primary reader stance—engineering retrospective, product or stakeholder observer, open-source adoption, or a clearly named user-specific equivalent—plus the technical altitude: concept, mechanism, or reproducible troubleshooting;
 4. the title promise, one-sentence thesis, intended reader, and promised value;
 5. what the reader must understand within the first 20% of the article;
-6. up to three primary evidence scenes with verification status and safe anchors, supporting evidence to compress, explicit scope exclusions, and material claims needing verification;
-7. a section plan whose entries each state `deep` or `supporting`, the claim, evidence and anchor, new value over the previous section, reader takeaway, and length budget;
+6. the necessary primary evidence scenes with verification status and safe anchors, supporting evidence to compress, explicit scope exclusions, and material claims needing verification;
+7. a section plan whose entries each state `deep` or `supporting`, the claim, evidence and anchor, new value over the previous section, reader takeaway, and estimated space;
 8. a synthesis artifact—table, checklist, decision tree, layered diagram, compact framework summary, or `none`;
-9. an image plan: `none` or the purpose and placement of each necessary image;
-10. the target length and proposed output path.
+9. a visual plan: `none` or each visual's purpose, placement, preferred format, and fallback format;
+10. a bottom-up estimated length range with a short rationale, plus the proposed output path.
 
 Require a synthesis artifact when the thesis contains three or more layers, components, states, or decision criteria. Introduce the framework before or near the first detailed case, then return to its completed form near the end.
 
-Use at most three deep sections. Remove or merge a shallow, uneven section instead of preserving it for narrative completeness.
-
-Treat length as a budget, not a target to fill. Excluding frontmatter and code, default to 1,800–3,000 Chinese characters for Chinese articles and 1,000–1,600 words for English articles. Allow a longer tutorial or reference article only when its contract justifies the added scope.
+Choose the number and depth of sections from the amount of distinct, verified information the thesis requires. Estimate length bottom-up from the context, mechanism, evidence, transitions, and synthesis each section needs. Present the estimate as a range, not a limit or target. Do not compress unique evidence to fit a preset size, and do not pad sparse material to reach one. When the user supplies a hard limit, reduce scope transparently or propose multiple articles rather than squeezing every selected session into it.
 
 Resolve the output root in this order:
 
@@ -121,11 +119,15 @@ Pause for article-contract approval. Do not draft the full article before approv
 
 ### 6. Draft in first person
 
-Write from the author's first-person perspective (`I` in English, `我` in Chinese). Reconstruct a coherent problem-solving narrative instead of replaying alternating chat turns. Preserve exact technical details that carry the lesson, but remove operational noise.
+Make the author the sole narrator. Write from the author's first-person perspective (`I` in English, `我` in Chinese) and never reveal or adopt an AI, assistant, agent, model, chat, session, prompt, or tool-process perspective. Do not write phrases such as “the assistant suggested,” “the agent found,” “the conversation showed,” or “we discovered” when `we` means the author plus AI. Use `we` only for an explicitly established human team supported by the source.
+
+When an insight originated in assistant text or tool activity, verify it independently and express it through the author's reasoning or the evidence itself—for example, “I changed my model after…,” “the trace showed…,” or “the test failed at…”. Never invent an action for the author merely to hide the AI source; use an evidence-led construction or omit the claim when authorship is unsupported. Codex, Claude, or another AI may appear only as an object the author used, evaluated, or discussed when it is genuinely part of the article's subject; it must never become the narrator or co-authorial voice.
+
+Reconstruct a coherent problem-solving narrative instead of replaying alternating chat turns. Preserve exact technical details that carry the lesson, but remove operational noise.
 
 Match the user's language unless asked otherwise. Match their vocabulary and level of directness from the selected sessions without imitating typos or exposing private speech. Never invent feelings, quotations, chronology, success, or certainty.
 
-Within the first 180 Chinese characters or 120 English words of the article body, establish the concrete tension and deliver every applicable part of the article contract: define an unfamiliar project or system, define the key term in operational language, and state or preview the organizing framework. Do not postpone the framework or essential definitions until after the detailed cases.
+In the opening section, establish the concrete tension and deliver every applicable part of the article contract: define an unfamiliar project or system, define the key term in operational language, and state or preview the organizing framework before the detailed cases begin. Give this orientation as much space as the system's unfamiliarity requires; do not impose a fixed character or word cap.
 
 Every article file must start at the first byte with this YAML frontmatter, using this exact field order and shape:
 
@@ -142,19 +144,18 @@ draft: true
 
 Replace the placeholders with the approved title, the current local date, a concise one-sentence description, two to five specific tags, and the descriptive slug. Keep `draft: true` as a YAML boolean. Make `slug` lowercase hyphen-case and keep it identical to the Markdown filename stem and the article's asset-directory name. Quote YAML string values when needed to preserve punctuation or avoid implicit scalar types. After the frontmatter, write ordinary Markdown; do not repeat the title as an H1 unless the user's publishing convention requires it.
 
-### 7. Generate images only when they teach
+### 7. Add visuals when they improve understanding
 
-Generate an image only when it explains a relationship that prose or a small code sample cannot explain as clearly—for example an architecture, state transition, before/after comparison, or conceptual model. Skip generic hero art and decorative stock imagery.
+During the article contract, inspect frameworks, state changes, timelines, comparisons, and multi-component interactions for useful visual treatment. Add visuals where they materially reduce cognitive load, make a reusable framework easier to scan, or clarify a sequence that prose handles poorly. Skip generic hero art and decorative filler.
 
-When an image is approved in the article contract:
+Resolve visual capability at runtime:
 
-1. use an available image-generation or diagram tool;
-2. save it under `<output-root>/assets/<article-slug>/`;
-3. use a stable lowercase filename;
-4. embed it as `assets/<article-slug>/<filename>` with meaningful alt text;
-5. add a short caption when the interpretation is not obvious.
+1. In Codex, use the available native image-generation skill or tool for an approved raster illustration, and prefer a structured diagram format or renderer for flows and architecture when it produces a portable result.
+2. In Claude, first inspect the available tools and skills for real image-generation or diagram capability and use it when present.
+3. In any runtime without drawing capability, render conceptual flows, frameworks, state machines, and comparisons as a concise ASCII or Unicode character diagram inside a fenced `text` block. Use plain ASCII when portability is uncertain and verify labels and alignment in monospace.
+4. Use an image brief only when the visual truly requires raster artwork and a character diagram cannot carry the intended meaning; never fabricate an asset path.
 
-Create the asset directory only when it will contain an approved image. If no image tool is available, insert a clearly marked image brief rather than fabricating a path.
+For generated visual assets, save them under `<output-root>/assets/<article-slug>/`, use a stable lowercase filename, embed them as `assets/<article-slug>/<filename>` with meaningful alt text, and add a short caption when interpretation is not obvious. Create the asset directory only when it will contain an actual file; character diagrams remain inline and need no asset directory. Give any external visual tool only a generalized, redacted brief—never transcript text, repository content, secrets, or private identifiers.
 
 ### 8. Edit through pass/fail gates
 
@@ -168,13 +169,15 @@ Run four separate editing passes. Each pass may rewrite or remove material; do n
 
 **Compression pass**
 
-- Enforce the article and per-section budgets.
+- Compare the draft with the estimated range and section estimates as diagnostics, not quotas. If distinct, necessary material makes the draft longer, update the estimate instead of deleting useful evidence; if it is shorter, do not pad it.
 - Remove or collapse secondary incidents, repeated explanations, and terminology that does not support the section's claim.
-- Keep at most three primary evidence scenes and three deep sections unless the approved contract explicitly justifies more.
+- Keep every primary scene and deep section that adds distinct value; merge or remove only redundant material or content belonging to another thesis.
 
 **Voice pass**
 
 - Apply the cadence audit in [references/writing.md](references/writing.md) and rewrite repeated rhetorical frames.
+- Fail the pass if any sentence exposes an assistant, agent, model, session, prompt, conversation, or tool-process viewpoint. Rewrite it in the author's voice or remove it; verify that every claimed first-person action belongs to the author.
+- Reject `we` when it implies an author–AI partnership. Keep it only for a source-supported human team.
 - Preserve at least one supported change in reasoning when the source contains one, including why the earlier assumption was reasonable.
 - Keep the full `problem → fix → principle` pattern in at most two sections. Preserve a failed path, rejected design, false green, tradeoff, or unresolved point when the source supports one.
 - Remove polished but generic aphorisms, conversation scaffolding, tool chatter, and irrelevant AI self-reference.
@@ -187,7 +190,7 @@ Run four separate editing passes. Each pass may rewrite or remove material; do n
 - Remove secrets and irrelevant personal details; label material uncertainty rather than smoothing it over.
 - Preserve unresolved entries in `claims needing verification`; never silently upgrade them during editing.
 - Verify that the required frontmatter is first, ordered correctly, and contains no placeholders; `date` is `YYYY-MM-DD`, `draft` is the boolean `true`, and `slug` matches the filename stem.
-- Resolve every link and image path. Keep article assets under `<output-root>/assets/<slug>/` and use relative paths.
+- Resolve every link and image path. Keep article assets under `<output-root>/assets/<slug>/` and use relative paths; verify inline character diagrams remain aligned and understandable without client-specific rendering.
 - End with a specific earned insight instead of a generic recap.
 
 Use pass/fail judgments, not numeric self-scores. Do not expose the internal audit unless the user asks. Return the article path, final title, approximate Chinese-character or English-word count, and a concise verification summary of repository or historical anchors checked, claims still unverified, and material redactions or generalizations. Do not expose sensitive paths or include the extracted transcript in the final response.

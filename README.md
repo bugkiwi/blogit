@@ -1,100 +1,104 @@
 # Blogit
 
-把最近的 Codex 或 Claude 编程会话，整理成一篇有事实依据、以第一人称讲述的 Markdown 文章。
+**English** | [简体中文](README.zh-CN.md)
 
-Blogit 不会简单地把聊天记录压缩成摘要。它会从会话里找出真正值得写的主线：最初的问题、改变判断的证据、关键决策、踩过的坑，以及读者可以复用的经验。生成过程中会先让你选择会话，再批准标题、证据和范围组成的 Article contract，最后才写完整文章。
+Turn recent Codex or Claude coding sessions into evidence-backed, first-person Markdown articles.
 
-## 它能做什么
+Blogit does more than compress a chat transcript into a summary. It finds the story worth telling: the original problem, the evidence that changed the author's understanding, the decisions that mattered, the failed paths, and the lesson a reader can reuse. It asks you to select the source sessions, approve an Article contract covering title, evidence, and scope, and only then writes the complete article.
 
-- 发现本机最近的 Codex 或 Claude 会话；
-- 只提取用户和助手可见的对话，过滤系统提示、推理、工具调用和工具输出；
-- 对“最终实现、正确做法、已上线”等可证伪主张进行定向、只读的仓库核对；
-- 将多个相关会话合并为同一篇文章；
-- 默认长度为中文 1,800–3,000 个汉字，或英文 1,000–1,600 个单词（不含 front matter 和代码）；
-- 每篇文章都带固定的 YAML front matter，包括标题、日期、描述、标签、slug 和草稿状态；
-- 默认将 Markdown 和相对路径图片资源整理到用户的 Documents/blogit 目录，也支持指定其他文件夹；
-- 在写作前提供文章类型、标题承诺、证据预算、范围排除和分节长度的 Article contract；
-- 在写入最终文件前通过结构、压缩、声音和事实四轮质量门槛，不通过就重写；
-- 对敏感内容进行脱敏，并区分已验证事实与尚未证实的判断；
-- 只在确实有助于解释架构、状态变化或前后对比时规划配图。
+## What it does
 
-## 工作流程
+- Discovers recent local Codex or Claude sessions.
+- Extracts only user- and assistant-visible dialogue while filtering system prompts, hidden reasoning, tool calls, and tool results.
+- Performs targeted, read-only repository verification for falsifiable claims such as the final implementation, the correct mechanism, or deployment status.
+- Combines related sessions into one coherent article.
+- Sets no default length limit; it estimates length bottom-up from the number of distinct claims, the evidence, and the explanation depth.
+- Starts every article with consistent YAML frontmatter containing title, date, description, tags, slug, and draft status.
+- Stores Markdown and relative image assets under the user's `Documents/blogit` directory by default, while supporting a user-selected folder.
+- Presents an Article contract with the article mode, title promise, evidence structure, scope exclusions, and a dynamic length estimate before drafting.
+- Runs four pass/fail editing gates—structure, compression, voice, and verification—and rewrites the draft when a gate fails.
+- Keeps the author as the article's only narrator. It never exposes an assistant, agent, conversation, prompt, or tool-process viewpoint, and never uses “we” to mean the author plus AI.
+- Redacts sensitive material and distinguishes verified facts from unresolved claims.
+- Adds useful visuals for architecture, state changes, timelines, and comparisons: Codex prefers available image or diagram generation; Claude first checks for connected drawing tools and falls back to character diagrams when none are available.
+
+## Workflow
 
 ```text
-发现最近会话 → 你选择会话 → 提取可见对话 → 选定文章类型
-      → 只读核对仓库 → 你批准 Article contract → 撰写文章 → 四轮编辑门槛 → 输出 Markdown
+Discover sessions → you select sessions → extract visible dialogue → choose article mode
+      → verify the repository read-only → you approve the Article contract
+      → draft → four editing gates → output Markdown
 ```
 
-Blogit 会在两个关键节点停下来等你确认：
+Blogit pauses for confirmation at two points:
 
-1. 选择要使用的会话；
-2. 批准标题、核心观点、证据预算和范围边界组成的 Article contract。
+1. selecting the sessions to use;
+2. approving the Article contract covering the title, thesis, evidence structure, scope boundaries, and dynamic length estimate.
 
-这样可以避免选错历史记录，也不会在方向尚未确定时直接生成一篇长文。
+This prevents the wrong history from being selected and avoids drafting a long article before its direction is settled.
 
-在客户端提供真正的原生多选工具时，第一步会直接使用客户端的多选 UI。Blogit 会检查工具能力，而不是只根据“桌面端”作判断；如果客户端只支持单选，或没有暴露结构化提问工具，则自动降级为编号文本选择，不会用 Markdown 复选框模拟界面。
+When the client exposes a true native multi-select tool, Blogit uses that interface for session selection. It checks the tool's actual capabilities instead of assuming every desktop client supports multi-select. If only single-select or plain text interaction is available, it falls back to a numbered list rather than simulating checkboxes in Markdown.
 
-## 安装
+## Installation
 
-### 环境要求
+### Requirements
 
-- 支持 Skills 的 Codex App、Codex CLI 或 IDE 扩展；
-- Python 3.10 或更高版本；
-- 本机已有 Codex 或 Claude 的会话记录。
+- Codex App, Codex CLI, or an IDE extension with Skills support;
+- Python 3.10 or newer;
+- local Codex or Claude session history.
 
-先检查 Python 版本：
+Check your Python version:
 
 ```bash
 python3 --version
 ```
 
-如果版本低于 3.10，请先安装新版本，并确保终端中的 `python3` 指向该版本。Blogit 只使用 Python 标准库，不需要额外安装依赖。
+If it is older than 3.10, install a newer version and make sure `python3` resolves to it. Blogit uses only the Python standard library and has no extra Python dependencies.
 
-### 让 Codex 安装（推荐）
+### Ask Codex to install it (recommended)
 
-在 Codex 中发送下面这句话：
+Send this prompt in Codex:
 
 ```text
-使用 $skill-installer 从 https://github.com/bugkiwi/blogit/tree/main/skills/blogit 安装 Blogit。
+Use $skill-installer to install Blogit from https://github.com/bugkiwi/blogit/tree/main/skills/blogit.
 ```
 
-安装器会在临时目录下载仓库，只把 `skills/blogit` 中的运行时文件放入 Skills 目录，不会保留 Git 历史、README 或测试文件。安装完成后，在下一条消息中即可使用 `$blogit`。
+The installer downloads the repository into a temporary directory and installs only the runtime files under `skills/blogit`. It does not retain Git history, the repository README files, or tests. You can use `$blogit` in your next message after installation.
 
-如果 Blogit 没有出现在 Skill 列表中，请重启 Codex；在 Codex CLI 或 IDE 中也可以使用 `/skills` 检查是否已发现。
+If Blogit does not appear in the Skills list, restart Codex. In Codex CLI or an IDE, you can also use `/skills` to confirm that it was discovered.
 
-### 使用 Skills CLI
+### Use Skills CLI
 
-如果你希望用命令行安装，并且需要方便地更新或卸载，可以使用开源的 [Skills CLI](https://github.com/vercel-labs/skills)。它需要 Node.js 18 或更高版本。
+If you prefer command-line installation with easy update and removal, use the open-source [Skills CLI](https://github.com/vercel-labs/skills). It requires Node.js 18 or newer.
 
-安装到当前用户，供 Codex 在所有项目中使用：
+Install globally for the current user:
 
 ```bash
 npx skills add bugkiwi/blogit --skill blogit --global --agent codex --yes
 ```
 
-更新到最新版本：
+Update to the latest version:
 
 ```bash
 npx skills update blogit --global --yes
 ```
 
-卸载：
+Remove it:
 
 ```bash
 npx skills remove blogit --global --yes
 ```
 
-只想在当前项目中启用时，去掉 `--global`：
+To enable it only for the current project, omit `--global`:
 
 ```bash
 npx skills add bugkiwi/blogit --skill blogit --agent codex --yes
 ```
 
-Skills CLI 会把真正的 Skill 子目录作为安装单元，因此上述命令同样不会把仓库的 README、tests 或 `.git` 目录装进去。
+Skills CLI installs the actual Skill subdirectory, so these commands also exclude the repository README files, tests, and `.git` directory.
 
-### 从本地源码开发
+### Develop from local source
 
-如果你正在修改 Blogit，可以使用软链接，改动会立即生效：
+When modifying Blogit locally, use a symlink so changes take effect immediately:
 
 ```bash
 git clone https://github.com/bugkiwi/blogit.git
@@ -103,97 +107,111 @@ mkdir -p "$HOME/.agents/skills"
 ln -s "$(pwd)/skills/blogit" "$HOME/.agents/skills/blogit"
 ```
 
-如果目标路径已经存在，请先确认它是否是旧版本或已有软链接，再自行决定是否替换。
+If the destination already exists, inspect whether it is an older installation or an existing symlink before deciding whether to replace it.
 
-Codex 支持用户级和项目级 Skill，也会跟随指向 Skill 目录的软链接。目录选择规则见 [Codex Skills 官方文档](https://learn.chatgpt.com/docs/build-skills#where-to-save-skills)。
+Codex discovers both user-level and project-level Skills and follows symlinks to Skill directories. See the [official Codex Skills documentation](https://learn.chatgpt.com/docs/build-skills#where-to-save-skills) for directory precedence.
 
-## 使用方法
+## Usage
 
-在 Codex 中直接提到 `$blogit`，并说明想写什么即可：
+Mention `$blogit` directly and describe the article you want:
 
 ```text
-使用 $blogit，把我最近一次排查缓存失效的 Codex 会话写成中文技术文章。
-面向有后端经验的工程师，控制在 2,200 个汉字左右，不需要配图。
+Use $blogit to turn my recent Codex session about debugging cache invalidation into an English technical article.
+Write for experienced backend engineers, estimate the length from the information density, and add any visuals that materially improve understanding.
 ```
 
-也可以让 Blogit 从多个会话中寻找同一条主线：
+Blogit can also find one shared thesis across multiple sessions:
 
 ```text
-使用 $blogit，把最近几次关于重试和幂等性的 Claude 会话整理成一篇文章。
-先帮我判断哪些会话适合合并，不相关的不要硬凑在一起。
+Use $blogit to turn my recent Claude sessions about retries and idempotency into one article.
+First decide which sessions belong together; do not force unrelated work into the same story.
 ```
 
-如果没有显式写 `$blogit`，当你的请求明确提到“根据最近的 Codex/Claude 会话写博客、复盘或技术文章”时，Codex 也可以自动启用它。
+Even without an explicit `$blogit` mention, Codex can activate the Skill when the request clearly asks for a blog post, retrospective, or technical article grounded in recent Codex or Claude sessions.
 
-## 完整示例
+## Complete example
 
-下面是一段典型交互。会话标题和 ID 仅为示意。
+The following interaction is illustrative. Session titles and IDs are examples only.
 
-**你：**
+**You:**
 
 ```text
-使用 $blogit，把我最近修复重复扣款问题的工作写成一篇中文技术文章。
-读者是做支付系统的后端工程师。
+Use $blogit to write an English technical article about my recent work fixing duplicate charges.
+The audience is backend engineers who build payment systems.
 ```
 
-**Blogit：**
+**Blogit:**
 
 ```text
-最近的会话：
+Recent sessions:
 
 1. Add idempotency keys         2026-07-12  payments-api
 2. Debug duplicate charges      2026-07-11  payments-api
 3. Update landing page          2026-07-10  marketing-site
 
-请选择一个或多个编号。
+Choose one or more numbers.
 ```
 
-**你：**
+**You:**
 
 ```text
-选 1 和 2。第三个不要。
+Use 1 and 2. Exclude 3.
 ```
 
-**Blogit：**
+**Blogit:**
 
 ```text
-标题候选：
-1. 一次重复扣款事故，让我重新理解了幂等性
-2. 重试不是再执行一次：支付接口的幂等改造
-3. 从重复扣款到安全重放：我给支付接口补上的约束
+Title options:
+1. The Duplicate Charge That Changed How I Think About Idempotency
+2. A Retry Is Not Just Another Execution: Rebuilding a Payment API for Idempotency
+3. From Duplicate Charges to Safe Replay: The Constraints I Added to a Payment API
 
-核心观点：可靠的重试不只依赖一个幂等键，还需要稳定的请求身份、
-原子写入，以及对“处理中”状态的明确处理。
+Thesis: Reliable retries need more than an idempotency key. They require a stable
+request identity, atomic writes, and explicit handling for in-progress requests.
 
-文章类型：engineering method
-读者高度：工程师复盘 / 机制层。
-标题承诺：解释支付接口要如何组合请求身份、原子写入和中间状态，才能安全重放。
-主要证据：重复扣款、竞态失败、重放测试（已用实现文件和测试名只读核对）。
-范围排除：不展开支付 SDK 全部架构和无关的运营流程。
-待核对主张：无。
-综合产物：一张安全重放检查表。
-目标篇幅：约 2,200 个汉字。
+Article mode: engineering method
+Reader altitude: engineering retrospective / mechanism level
+Title promise: explain how request identity, atomic writes, and intermediate states
+combine to make payment requests safe to replay.
+Primary evidence: duplicate charges, a race-condition failure, and replay tests
+(verified read-only against implementation files and test names).
+Scope exclusions: the full payment SDK architecture and unrelated operational workflows.
+Claims needing verification: none.
+Synthesis artifact: a safe-replay checklist.
+Estimated length: about 1,600–2,200 words, derived from three mechanism-level sections,
+two supporting sections, and the opening and synthesis. This is a forecast, not a cap.
 
-节计划：
-1. [deep / 350 字] Claim: 重复扣款暴露请求身份问题；Evidence: 事故记录；New value: 界定失败边界；Takeaway: 先稳定请求身份。
-2. [deep / 450 字] Claim: 只写幂等记录仍有竞态；Evidence: 被否决方案和测试；New value: 解释中间状态；Takeaway: 保留处理中语义。
-3. [deep / 500 字] Claim: 原子写入才能防止重复侧效应；Evidence: 实现文件与竞态测试；New value: 给出最终机制；Takeaway: 将记录与业务写入放入同一原子边界。
-4. [supporting / 300 字] Claim: 重放测试能证明修复；Evidence: 测试名与历史结果；New value: 完成验证；Takeaway: 覆盖并发重放。
-5. [supporting / 250 字] Claim: 方法可复用；Evidence: 前文已验证机制；New value: 压缩为检查表；Takeaway: 在其他写接口中复用。
+Section plan:
+1. [deep / ~300 words] Claim: duplicate charges expose unstable request identity;
+   Evidence: incident record; New value: define the failure boundary;
+   Takeaway: stabilize request identity first.
+2. [deep / ~400 words] Claim: an idempotency record alone still races;
+   Evidence: rejected design and tests; New value: explain the intermediate state;
+   Takeaway: preserve in-progress semantics.
+3. [deep / ~500 words] Claim: atomic writes prevent duplicate side effects;
+   Evidence: implementation and race test; New value: establish the final mechanism;
+   Takeaway: keep the record and business write inside one atomic boundary.
+4. [supporting / ~300 words] Claim: replay testing verifies the repair;
+   Evidence: test names and historical result; New value: complete verification;
+   Takeaway: cover concurrent replay.
+5. [supporting / ~250 words] Claim: the method transfers;
+   Evidence: the verified mechanism above; New value: compress it into a checklist;
+   Takeaway: reuse it for other write APIs.
 
-配图：无
-输出：~/Documents/blogit/payments-idempotency.md
+Visual plan: a state flow for atomic writes and replay. Codex should prefer a generated
+diagram; Claude should use a character flow diagram when no drawing tool is available.
+Output: ~/Documents/blogit/payments-idempotency.md
 ```
 
-**你：**
+**You:**
 
 ```text
-用标题 2，Article contract 通过。
+Use title 2. The Article contract is approved.
 ```
 
-Blogit 随后会生成文章，并返回最终标题、文件路径、近似字数，以及必要的脱敏或未验证信息说明。
+Blogit then generates the article and returns its final title, file path, approximate length, and any material redactions or unverified claims.
 
-生成的 Markdown 会从下面的固定结构开始，字段顺序保持不变：
+Generated Markdown always begins with this structure, in this field order:
 
 ```yaml
 ---
@@ -206,25 +224,25 @@ draft: true
 ---
 ```
 
-其中 `xxx`、`yyy`、标签和 slug 会替换为文章的实际内容，`draft` 默认保持为布尔值 `true`。macOS 和 Linux 默认输出到 `~/Documents/blogit/<slug>.md`；Windows 默认使用当前用户的 Documents 已知文件夹下的 `blogit\<slug>.md`。如果文章需要图片，则保存到同一输出根目录的 `assets/<slug>/`，Markdown 使用相对路径引用。用户在请求中指定的目录始终优先。
+Blogit replaces `xxx`, `yyy`, the tags, and the slug with article-specific values. `draft` remains the YAML boolean `true`. On macOS and Linux, the default output is `~/Documents/blogit/<slug>.md`; on Windows, it uses `blogit\<slug>.md` under the current user's known Documents folder. Generated images are stored under `assets/<slug>/` beside the article root and referenced with relative Markdown paths. Character diagrams stay inline inside fenced `text` blocks and do not create empty asset directories. A user-specified output directory always takes precedence.
 
-## 底层命令
+## CLI commands
 
-通常不需要手动运行脚本，Codex 会按照 `SKILL.md` 完成这些步骤。排查会话发现或解析问题时，可以直接使用 CLI。
+You normally do not need to run the parser directly; Codex follows `SKILL.md`. These commands are useful when diagnosing session discovery or parsing.
 
-列出最近十个 Codex 会话：
+List the ten most recent Codex sessions:
 
 ```bash
 python3 skills/blogit/scripts/blogit.py list --agent codex --limit 10
 ```
 
-列出最近十个 Claude 会话：
+List the ten most recent Claude sessions:
 
 ```bash
 python3 skills/blogit/scripts/blogit.py list --agent claude --limit 10
 ```
 
-提取一个或多个会话中的可见对话：
+Extract visible dialogue from one or more sessions:
 
 ```bash
 python3 skills/blogit/scripts/blogit.py extract \
@@ -234,29 +252,30 @@ python3 skills/blogit/scripts/blogit.py extract \
   --output /tmp/blogit-transcript.md
 ```
 
-如需指定非默认配置目录，可在 `list` 或 `extract` 后增加 `--home <path>`。
+Use `--home <path>` with either `list` or `extract` to override the default agent configuration directory.
 
-## 隐私说明
+## Privacy
 
-会话历史可能包含代码、内部地址、账号信息或其他敏感内容。Blogit 的解析器只读取本机会话文件，并过滤系统提示、隐藏推理、工具调用、工具结果和附件占位内容；写作流程还要求在分析前移除凭据、令牌、私钥、个人联系方式、内部 URL 和无关隐私信息。
+Session history may contain code, internal URLs, account data, or other sensitive material. Blogit's parser reads local session files and filters system prompts, hidden reasoning, tool calls, tool results, and attachment placeholders. The writing workflow also removes credentials, tokens, private keys, personal contact details, internal URLs, and unrelated private information before analysis.
 
-解析器本身不会把会话内容发送给搜索、图片生成或其他第三方工具，也不会从 tool result 中抽取所谓“证据提示”。写作流程仅使用会话里已有的 project 路径定向、只读核对相关文件和 Git 历史；不会上传仓库内容。无法核对的技术主张会降级措辞或在交付时列出。生成的临时对话文件也不会包含在最终回复中。即便如此，发布文章前仍建议人工检查一次正文和生成的资源。
+The parser does not send session content to search, image generation, or another third-party tool, and it does not mine tool results for so-called evidence hints. The writing workflow uses only the session's existing project path for targeted, read-only inspection of relevant files and Git history; it does not upload repository content. Technical claims that cannot be verified are softened or listed in the final handoff. Temporary transcript files are never included in the final response. Even with these safeguards, review the article and generated assets before publishing.
 
-## 开发与测试
+## Development and testing
 
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-项目结构：
+Repository structure:
 
 ```text
 blogit/
-├── README.md
-├── skills/blogit/          # 实际安装的精简 Skill 目录
-│   ├── SKILL.md            # Skill 的核心工作流
-│   ├── agents/openai.yaml  # Codex UI 元数据
-│   ├── scripts/            # 会话发现、提取与解析 CLI
-│   └── references/         # 写作与格式适配说明
-└── tests/                  # 仓库测试，不进入安装目录
+├── README.md             # Default English documentation
+├── README.zh-CN.md       # Simplified Chinese documentation
+├── skills/blogit/          # Minimal installable Skill directory
+│   ├── SKILL.md            # Core Skill workflow
+│   ├── agents/openai.yaml  # Codex UI metadata
+│   ├── scripts/            # Session discovery and extraction CLI
+│   └── references/         # Writing and adapter guidance
+└── tests/                  # Repository tests, not installed
 ```

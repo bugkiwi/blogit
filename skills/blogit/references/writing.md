@@ -19,8 +19,11 @@ Apply this arc to the article, not as a miniature template inside every section.
 
 ## First-person truthfulness
 
-- Use first person for actions, judgments, and lessons supported by the history.
-- Attribute tool or agent discoveries naturally: “The trace showed…” or “When I inspected…” rather than pretending unaided recall.
+- Make the author the only narrator. Use first person for the author's supported actions, judgments, and lessons; never narrate as an assistant, agent, model, or author–AI partnership.
+- Never expose the source conversation or production process through phrases such as “the assistant suggested,” “the agent discovered,” “the conversation showed,” “the prompt asked,” or “the tool returned.”
+- Never use `we` to mean the author plus AI. Use it only for an explicitly identified human team supported by the source.
+- Convert independently verified discoveries into author-controlled, evidence-led prose: “The trace showed…” or “The test failed…”. Use “I inspected…” only when the source supports that the author performed the action.
+- When AI is genuinely the article's subject, mention it only as something the author used, evaluated, or observed. It must never narrate, address the reader, or appear as a co-author.
 - Do not claim an implementation shipped when the record shows only a proposal or local change.
 - Do not invent emotions. “I was frustrated” needs evidence; “The mismatch was easy to miss” usually does not.
 - Paraphrase dialogue. Use quotation marks only for short, exact, consequential wording present in the source.
@@ -41,13 +44,13 @@ Never claim a final implementation, correct approach, or shipped result from an 
 
 For coverage, test counts, benchmarks, costs, or multipliers, preserve the available date or commit, measured package or component, source anchor, environment, sample count, cache and network state, measurement boundaries, and whether the value is a mean, median, best run, or representative snapshot. If important context is missing, round or remove the value and label what remains as a historical or illustrative snapshot instead of presenting false precision.
 
-## Evidence and density budget
+## Evidence selection and density
 
-- Use at most three primary evidence scenes by default; compress supporting incidents into short corroboration.
-- Use at most three deep sections. Give each section one main claim and one internal reader takeaway; do not turn every takeaway into an explicit principle paragraph.
+- Keep every evidence scene that advances a distinct claim, reasoning change, boundary, or reusable lesson; compress only redundant incidents into short corroboration.
+- Create as many deep sections as the verified information requires. Give each one a main claim and an internal reader takeaway; do not turn every takeaway into an explicit principle paragraph.
 - Introduce only the terms required to understand the section's claim. Define a necessary unfamiliar term where it first matters.
 - Remove a case when it repeats an earlier proof, adds more terminology than reusable insight, or mainly records completed work.
-- Treat the approved length and per-section allocations as ceilings, not space to fill.
+- Estimate space from the explanation each claim and evidence set needs. Never delete unique information to hit a predetermined length, and never add filler to match an estimate. If distinct material produces competing theses, split the work into separate articles.
 
 ## Remove the AI aftertaste
 
@@ -59,7 +62,7 @@ For coverage, test counts, benchmarks, costs, or multipliers, preserve the avail
 - Avoid repeated contrast templates such as “not only X, but also Y.”
 - Delete throat-clearing, duplicate summaries, and conclusions that merely restate every section.
 - Keep a few telling constraints, failed attempts, and corrections. Perfect linear progress sounds false.
-- Do not mention prompts, tokens, agents, or “the conversation” unless AI-assisted work is itself the article's subject.
+- Do not expose prompts, tokens, agents, sessions, conversations, tool chatter, or the AI-assisted drafting process. If AI is the explicit subject, keep every statement inside the author's viewpoint.
 - Do not append generic “future outlook” sections without evidence.
 
 Run a cadence audit for repeated rhetorical frames, including `不是……而是……`, `不只是……`, `看起来……实际上……`, `这让我……`, `我确认了一件事……`, `真正的……是……`, `最终我……`, `X 从来不是……`, and their English equivalents. Allow no more than two uses of the same frame in the full article. Use the complete `problem → fix → principle` rhythm in at most two sections; let other sections end on evidence, tradeoff, or uncertainty.
@@ -72,13 +75,16 @@ Run a cadence audit for repeated rhetorical frames, including `不是……而�
 - Give each important number a safe, reproducible anchor such as a test, fixture, script, table note, commit, or dated measurement; otherwise weaken or remove the number.
 - Use tables only for true comparisons across repeated fields.
 - Prefer a diagram when three or more components or states interact and prose becomes hard to follow.
-- When the thesis has three or more layers, components, states, or decision criteria, include one reusable synthesis artifact such as a comparison table, checklist, decision tree, layered diagram, or compact framework summary. Introduce it before or near the first detailed case and complete it near the end.
+- When the thesis has three or more layers, components, states, or decision criteria, include at least one reusable synthesis artifact such as a comparison table, checklist, decision tree, layered diagram, or compact framework summary. Introduce it before or near the first detailed case and complete it near the end.
+- When no image or diagram tool is available, use a fenced `text` block with a compact ASCII or Unicode flow, state, hierarchy, or comparison diagram. Verify monospace alignment and keep labels concise.
 
 ## Language
 
-In Chinese, prefer direct contemporary prose. Use `我` naturally, avoid dense strings of four-character slogans, and replace vague phrases such as “赋能、沉淀、抓手、闭环” unless they are the author's normal domain vocabulary. Default to 1,800–3,000 Chinese characters, excluding frontmatter and code.
+In Chinese, prefer direct contemporary prose. Use `我` naturally, avoid dense strings of four-character slogans, and replace vague phrases such as “赋能、沉淀、抓手、闭环” unless they are the author's normal domain vocabulary. Estimate Chinese length in characters after the article contract is defined.
 
-In English, prefer contractions when they match the author, avoid corporate filler, and use active voice without forcing every sentence into the same cadence. Default to 1,000–1,600 words, excluding frontmatter and code.
+In English, prefer contractions when they match the author, avoid corporate filler, and use active voice without forcing every sentence into the same cadence. Estimate English length in words after the article contract is defined.
+
+There is no default article length. Derive an approximate range from the amount and depth of distinct information, excluding frontmatter and code. Treat the range as a planning forecast, not a quota.
 
 ## Final edit
 
